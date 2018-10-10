@@ -80,10 +80,12 @@ def upload_ads(adgroup_ids):
             environment = ENVIRONMENT,
             version = 11,
         )
+        ads.insert_ad_details(adgroup_ids, campaignmanagement_service)
+        print('finished updating ads')
 
 
 
-def upload_keywords():
+def upload_keywords(adgroup_ids):
     pass
 
 

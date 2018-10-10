@@ -12,4 +12,21 @@ def delete_ads():
 
 
 def insert_ad_details(adgroup_ids, campaignmanagement_service):
-    pass
+    insertion_query = 'INSERT INTO heycar.mkt_ad (dwh_date, mkt_source, ad_id, name, status, final_url, type, adgroup_id) VALUES'
+    dwh_date = datetime.datetime.today().strftime('%Y-%m-%d')
+    dwh_date = "'" + str(dwh_date) + "'"
+
+    for adgroup_id in adgroup_ids:
+        try: #adgroup_id might be from a different account
+            response = campaignmanagement_service.GetAdsByAdGroupId(
+                AdGroupId = adgroup_id,
+                AdTypes =ALL_AD_TYPES)
+            for ad in response[0]:
+                insertion_query +='(' + dwh_date + ',\'bing_ads\',\'' + str(ad['Id']) + '\',\'' + str(ad['Id']) + '\',\'' + ad['Status'] + '\',\'' + ad['FinalUrls'] + '\',\'' + ad['Type'] + '\',\'' + str(adgroup_id) + '\'),'
+        except Exception as e:
+            print('adgroup id not found... not a biggie')
+    insertion_query = insertion_query[:-1] #removes the last comma
+    con = pc.connect(dbname = db.credentials['db_name'] , host = db.credentials['db_host'] , port = db.credentials['db_port'], user = db.credentials['db_user'], password = db.credentials['db_pw'])
+    cur = con.cursor()
+    cur.execute(insertion_query)
+    con.commit()      
