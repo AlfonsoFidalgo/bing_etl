@@ -1,0 +1,10 @@
+*.ipynb
+*.csv
+__pycache__
+.DS_Store
+auth_helper.py
+campaignmanagement_example_helper.py
+draft.py
+output_helper.py
+refresh.txt
+db_credentials.py
