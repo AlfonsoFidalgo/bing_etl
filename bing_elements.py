@@ -41,7 +41,16 @@ def upload_accounts():
     accounts.insert_account_details(account_response)
 
 def upload_campaigns():
-    campaigns.insert_campaign_details(account_ids, campaignmanagement_service)
+    campaigns.delete_campaigns()
+    for account_id in account_ids:
+        authenticate(authorization_data, account_id)
+        campaignmanagement_service = ServiceClient(
+            'CampaignManagementService',
+            authorization_data = authorization_data,
+            environment = ENVIRONMENT,
+            version = 11,
+        )
+        campaigns.insert_campaign_details([account_id], campaignmanagement_service)
 
 def upload_adgroups():
     campaign_ids = campaigns.get_campaign_ids(account_ids, campaignmanagement_service)
@@ -54,8 +63,5 @@ def upload_keywords():
     pass
 
 
-
-#
 # if __name__ == '__main__':
-    #upload_accounts()
-    #upload_campaigns()
+#     #upload_accounts()

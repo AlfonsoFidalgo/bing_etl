@@ -10,3 +10,4 @@ def insert_adgroup_details(campaign_ids, campaignmanagement_service):
             CampaignId = campaign_id,
             ReturnAdditionalFields = [],
             ReturnCoOpAdGroups = False)
+        print(response)

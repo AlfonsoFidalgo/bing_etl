@@ -26,15 +26,21 @@ def get_campaign_ids(account_ids, campaignmanagement_service):
             for campaign in response[0]:
                 campaign_ids.append(campaign['Id'])
         except Exception as e:
-            print('No campaigns found in account id ' + account_id)
+            print('No campaigns found in account id ' + str(account_id))
     return campaign_ids
-        #return [campaign['Id'] for campaign in response[0]]
+
+def delete_campaigns():
+    deletion_query = 'DELETE FROM heycar.mkt_campaign  WHERE mkt_source=\'bing_ads\';'
+    con = pc.connect(dbname = db.credentials['db_name'] , host = db.credentials['db_host'] , port = db.credentials['db_port'], user = db.credentials['db_user'], password = db.credentials['db_pw'])
+    cur = con.cursor()
+    cur.execute(deletion_query)
+    con.commit()
+
 
 def insert_campaign_details(account_ids, campaignmanagement_service):
     """
     Inserts Bing campaign details into heycar.mkt_campaign
     """
-    deletion_query = 'DELETE FROM heycar.mkt_campaign  WHERE mkt_source=\'bing_ads\';'
     insertion_query = 'INSERT INTO heycar.mkt_campaign(dwh_date, mkt_source, campaign_id, name, status, network, cost_limit, account_id) VALUES '
     dwh_date = datetime.datetime.today().strftime('%Y-%m-%d')
     dwh_date = "'" + str(dwh_date) + "'"
@@ -52,7 +58,5 @@ def insert_campaign_details(account_ids, campaignmanagement_service):
     # print(insertion_query)
     con = pc.connect(dbname = db.credentials['db_name'] , host = db.credentials['db_host'] , port = db.credentials['db_port'], user = db.credentials['db_user'], password = db.credentials['db_pw'])
     cur = con.cursor()
-    cur.execute(deletion_query)
-    con.commit()
     cur.execute(insertion_query)
     con.commit()
