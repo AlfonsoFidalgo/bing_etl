@@ -54,10 +54,11 @@ def upload_campaigns():
             version = 11,
         )
         campaigns.insert_campaign_details([account_id], campaignmanagement_service)
-        print('finished updating campaigns')
+    print('finished updating campaigns')
 
 def upload_adgroups():
     adgroups.delete_adgroups()
+    adgroup_ids = []
     for account_id in account_ids:
         authenticate(authorization_data, account_id)
         campaignmanagement_service = ServiceClient(
@@ -67,9 +68,10 @@ def upload_adgroups():
             version = 11,
         )
         campaign_ids = campaigns.get_campaign_ids([account_id], campaignmanagement_service)
-        adgroup_ids = adgroups.insert_adgroup_details(campaign_ids, campaignmanagement_service)
-        print('finished updating adgroups')
-        return adgroup_ids
+        adgr_ids = adgroups.insert_adgroup_details(campaign_ids, campaignmanagement_service)
+        adgroup_ids += adgr_ids
+    print('finished updating adgroups')
+    return adgroup_ids
 
 def upload_ads(adgroup_ids):
     ads.delete_ads()
@@ -99,9 +101,9 @@ def upload_keywords(adgroup_ids):
 
 
 
-if __name__ == '__main__':
-    upload_accounts()
-    upload_campaigns()
-    adgroup_ids = upload_adgroups()
-    upload_ads(adgroup_ids)
-    upload_keywords(adgroup_ids)
+# if __name__ == '__main__':
+#     upload_accounts()
+#     upload_campaigns()
+#     adgroup_ids = upload_adgroups()
+#     upload_ads(adgroup_ids)
+#     upload_keywords(adgroup_ids)

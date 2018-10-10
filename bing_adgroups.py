@@ -25,6 +25,7 @@ def insert_adgroup_details(campaign_ids, campaignmanagement_service):
             adgroup_ids.append(adgroup['Id'])
             insertion_query +='(' + dwh_date + ',\'bing_ads\',\'' + str(adgroup['Id']) + '\',\'' + adgroup['Name'] + '\',\'' + adgroup['Status'] + '\',\'' + str(campaign_id) + '\'),'
     insertion_query = insertion_query[:-1] #removes the last comma
+    insertion_query += ';'
     con = pc.connect(dbname = db.credentials['db_name'] , host = db.credentials['db_host'] , port = db.credentials['db_port'], user = db.credentials['db_user'], password = db.credentials['db_pw'])
     cur = con.cursor()
     cur.execute(insertion_query)

@@ -12,7 +12,7 @@ def delete_keywords():
 
 
 def insert_keyword_details(adgroup_ids, campaignmanagement_service):
-    insertion_query = 'INSERT INTO heycar.mkt_keyword (dwh_date, mkt_source, keyword_id, text, match_type, adgroup_id) VALUES'
+    insertion_query = 'INSERT INTO heycar.mkt_keyword (dwh_date, mkt_source, keyword_id, text, match_type, adgroup_id) VALUES '
     dwh_date = datetime.datetime.today().strftime('%Y-%m-%d')
     dwh_date = "'" + str(dwh_date) + "'"
 
@@ -22,8 +22,9 @@ def insert_keyword_details(adgroup_ids, campaignmanagement_service):
             for kw in response[0]:
                 insertion_query +='(' + dwh_date + ',\'bing_ads\',\'' + str(kw['Id']) + '\',\'' + kw['Text'] + '\',\'' + kw['MatchType'] + '\',\'' + str(adgroup_id) + '\'),'
         except Exception as e:
-            print('adgroup id not found... not a biggie')
+            pass
     insertion_query = insertion_query[:-1] #removes the last comma
+    insertion_query += ';'
     con = pc.connect(dbname = db.credentials['db_name'] , host = db.credentials['db_host'] , port = db.credentials['db_port'], user = db.credentials['db_user'], password = db.credentials['db_pw'])
     cur = con.cursor()
     cur.execute(insertion_query)
