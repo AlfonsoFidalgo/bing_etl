@@ -5,6 +5,7 @@ import bing_accounts as accounts
 import bing_campaigns as campaigns
 import bing_adgroups as adgroups
 import bing_adcopy as ads
+import bing_keywords as keywords
 
 ##AUTHORIZE
 authorization_data=AuthorizationData(
@@ -86,7 +87,18 @@ def upload_ads(adgroup_ids):
 
 
 def upload_keywords(adgroup_ids):
-    pass
+    keywords.delete_keywords()
+    for account_id in account_ids:
+        authenticate(authorization_data, account_id)
+        campaignmanagement_service = ServiceClient(
+            'CampaignManagementService',
+            authorization_data = authorization_data,
+            environment = ENVIRONMENT,
+            version = 11,
+        )
+        keywords.insert_keyword_details(adgroup_ids, campaignmanagement_service)
+        print('finished updating keywords')       
+
 
 
 # if __name__ == '__main__':
