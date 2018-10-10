@@ -32,7 +32,6 @@ def insert_account_details(response):
         insertion_query += '(' + dwh_date + ',\'bing_ads\',\'' + str(account['Id']) + '\', \'' + account['Name'] +'\'),'
     insertion_query = insertion_query[:-1]
     insertion_query += ';'
-    print(insertion_query)
     con = pc.connect(dbname = db.credentials['db_name'] , host = db.credentials['db_host'] , port = db.credentials['db_port'], user = db.credentials['db_user'], password = db.credentials['db_pw'])
     cur = con.cursor()
     cur.execute(deletion_query)
