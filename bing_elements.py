@@ -53,8 +53,8 @@ def upload_campaigns():
             environment = ENVIRONMENT,
             version = 11,
         )
-        print('finished updating campaigns')
         campaigns.insert_campaign_details([account_id], campaignmanagement_service)
+        print('finished updating campaigns')
 
 def upload_adgroups():
     adgroups.delete_adgroups()
@@ -84,8 +84,6 @@ def upload_ads(adgroup_ids):
         ads.insert_ad_details(adgroup_ids, campaignmanagement_service)
         print('finished updating ads')
 
-
-
 def upload_keywords(adgroup_ids):
     keywords.delete_keywords()
     for account_id in account_ids:
@@ -97,9 +95,13 @@ def upload_keywords(adgroup_ids):
             version = 11,
         )
         keywords.insert_keyword_details(adgroup_ids, campaignmanagement_service)
-        print('finished updating keywords')       
+        print('finished updating keywords')
 
 
 
-# if __name__ == '__main__':
-#     #upload_accounts()
+if __name__ == '__main__':
+    upload_accounts()
+    upload_campaigns()
+    adgroup_ids = upload_adgroups()
+    upload_ads(adgroup_ids)
+    upload_keywords(adgroup_ids)
