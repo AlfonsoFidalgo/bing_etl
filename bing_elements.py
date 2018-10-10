@@ -53,8 +53,17 @@ def upload_campaigns():
         campaigns.insert_campaign_details([account_id], campaignmanagement_service)
 
 def upload_adgroups():
-    campaign_ids = campaigns.get_campaign_ids(account_ids, campaignmanagement_service)
-    adgroups.insert_adgroup_details(campaign_ids, campaignmanagement_service)
+    adgroups.delete_adgroups()
+    for account_id in account_ids:
+        authenticate(authorization_data, account_id)
+        campaignmanagement_service = ServiceClient(
+            'CampaignManagementService',
+            authorization_data = authorization_data,
+            environment = ENVIRONMENT,
+            version = 11,
+        )
+        campaign_ids = campaigns.get_campaign_ids([account_id], campaignmanagement_service)
+        adgroups.insert_adgroup_details(campaign_ids, campaignmanagement_service)
 
 def upload_ads():
     pass
