@@ -16,19 +16,33 @@ def insert_ad_details(adgroup_ids, campaignmanagement_service):
     dwh_date = datetime.datetime.today().strftime('%Y-%m-%d')
     dwh_date = "'" + str(dwh_date) + "'"
 
+    ad_types = {'AdType': ['AppInstall',
+    'DynamicSearch',
+    'ExpandedText',
+    'Product',
+    'ResponsiveAd',
+    'Text']}
+
     for adgroup_id in adgroup_ids:
         try: #adgroup_id might be from a different account
             response = campaignmanagement_service.GetAdsByAdGroupId(
                 AdGroupId = adgroup_id,
-                AdTypes =ALL_AD_TYPES)
+                AdTypes = ad_types)
             for ad in response[0]:
+                if (len(ad['FinalUrls'][0]) > 0):
+                    finalUrl = ad['FinalUrls'][0][0]
+                else:
+                    finalUrl = ''
                 insertion_query += '(' + dwh_date + ',\'bing_ads\',\'' + str(ad['Id']) + '\',\'' + str(ad['Id'])
-                insertion_query += '\',\'' + ad['Status'] + '\',\'' + str(ad['FinalUrls']) + '\',\'' + ad['Type'] + '\',\'' + str(adgroup_id) + '\'),'
+                insertion_query += '\',\'' + ad['Status'] + '\',\'' + finalUrl + '\',\'' + ad['Type'] + '\',\'' + str(adgroup_id) + '\'),'
         except Exception as e:
             pass
-    insertion_query = insertion_query[:-1] #removes the last comma
-    insertion_query += ';'
-    con = pc.connect(dbname = db.credentials['db_name'] , host = db.credentials['db_host'] , port = db.credentials['db_port'], user = db.credentials['db_user'], password = db.credentials['db_pw'])
-    cur = con.cursor()
-    cur.execute(insertion_query)
-    con.commit()
+    try:
+        insertion_query = insertion_query[:-1] #removes the last comma
+        insertion_query += ';'
+        con = pc.connect(dbname = db.credentials['db_name'] , host = db.credentials['db_host'] , port = db.credentials['db_port'], user = db.credentials['db_user'], password = db.credentials['db_pw'])
+        cur = con.cursor()
+        cur.execute(insertion_query)
+        con.commit()
+    except Exception as e:
+        pass

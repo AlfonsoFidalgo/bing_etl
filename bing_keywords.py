@@ -23,9 +23,12 @@ def insert_keyword_details(adgroup_ids, campaignmanagement_service):
                 insertion_query +='(' + dwh_date + ',\'bing_ads\',\'' + str(kw['Id']) + '\',\'' + kw['Text'] + '\',\'' + kw['MatchType'] + '\',\'' + str(adgroup_id) + '\'),'
         except Exception as e:
             pass
-    insertion_query = insertion_query[:-1] #removes the last comma
-    insertion_query += ';'
-    con = pc.connect(dbname = db.credentials['db_name'] , host = db.credentials['db_host'] , port = db.credentials['db_port'], user = db.credentials['db_user'], password = db.credentials['db_pw'])
-    cur = con.cursor()
-    cur.execute(insertion_query)
-    con.commit()
+    try:
+        insertion_query = insertion_query[:-1] #removes the last comma
+        insertion_query += ';'
+        con = pc.connect(dbname = db.credentials['db_name'] , host = db.credentials['db_host'] , port = db.credentials['db_port'], user = db.credentials['db_user'], password = db.credentials['db_pw'])
+        cur = con.cursor()
+        cur.execute(insertion_query)
+        con.commit()
+    except Exception as e:
+        pass
